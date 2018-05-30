@@ -138,10 +138,37 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
+  // begin picutre
+  // <picture>
+  //   <source media="(min-width: 750px)" srcset="images/still_life-1600_large_2x.jpg 2x" type="image/jpeg" >
+  //     <source media="(min-width: 750px)" srcset="images/still_life-1600_large_2x.jpg 2x" type="image/jpeg" >
+  //     <img src="images/still_life-1600_large_2x.jpg" alt="Still Life">
+  // </picture>
+  const pic= document.createElement("picture");
+
+  const source1= document.createElement("source");
+  source1.media="(min-width: 1180px)";
+  source1.srcset=DBHelper.imageUrlForRestaurant_small(restaurant);
+  pic.append(source1);
+
+  const source2= document.createElement("source");
+  source2.media="(min-width: 744px)";
+  source2.srcset=DBHelper.imageUrlForRestaurant_medium(restaurant);
+  pic.append(source2);
+
+  const source3= document.createElement("source");
+  source3.media="(max-width: 743px)";
+  source3.srcset=DBHelper.imageUrlForRestaurant_large(restaurant);
+  pic.append(source3);
+
+  // end picture
+
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  li.append(image);
+  image.src = DBHelper.imageUrlForRestaurant_small(restaurant);
+  pic.append(image);
+  li.append(pic);
+  // li.append(image);
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;

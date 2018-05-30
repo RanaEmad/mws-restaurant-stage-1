@@ -55,9 +55,33 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
-  const image = document.getElementById('restaurant-img');
+  // begin picutre
+  // <picture>
+  //   <source media="(min-width: 750px)" srcset="images/still_life-1600_large_2x.jpg 2x" type="image/jpeg" >
+  //     <source media="(min-width: 750px)" srcset="images/still_life-1600_large_2x.jpg 2x" type="image/jpeg" >
+  //     <img src="images/still_life-1600_large_2x.jpg" alt="Still Life">
+  // </picture>
+  const pic= document.getElementById('restaurant-img');
+
+  const source1= document.createElement("source");
+  source1.media="(min-width: 1180px)";
+  source1.srcset=DBHelper.imageUrlForRestaurant_mlarge(restaurant);
+  source1.className='restaurant-img';
+  pic.append(source1);
+
+  const source2= document.createElement("source");
+  source2.media="(max-width: 1180px)";
+  source2.srcset=DBHelper.imageUrlForRestaurant_large(restaurant);
+  pic.append(source2);
+
+
+  // end picture
+// const image = document.getElementById('restaurant-img');
+  const image = document.createElement("img");
   image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.src = DBHelper.imageUrlForRestaurant_large(restaurant);
+  image.alt= DBHelper.imageAlt(restaurant);
+  pic.append(image);
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
