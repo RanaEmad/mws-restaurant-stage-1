@@ -1,5 +1,17 @@
 let restaurant;
-var map;
+let map;
+
+function register_sw(){
+  //register service worker
+if(!navigator.serviceWorker)
+	return;
+navigator.serviceWorker.register('/sw.js').then(function(reg) {
+	 console.log("Registered!");
+  }).catch(function(){
+	  console.log("Registration Failed!");
+  });
+}
+register_sw();
 
 /**
  * Initialize Google map, called from HTML.

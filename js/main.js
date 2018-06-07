@@ -8,7 +8,7 @@ function register_sw(){
   //register service worker
 if(!navigator.serviceWorker)
 	return;
-navigator.serviceWorker.register('/sw.js').then(function(reg) {	
+navigator.serviceWorker.register('/sw.js').then(function(reg) {
 	 console.log("Registered!");
   }).catch(function(){
 	  console.log("Registration Failed!");
@@ -178,6 +178,7 @@ createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant_small(restaurant);
+  image.alt= DBHelper.imageAlt(restaurant);
   pic.append(image);
   li.append(pic);
   // li.append(image);
