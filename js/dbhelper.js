@@ -4,31 +4,19 @@
 class DBHelper {
 
   /**
-   * Database URL.
-   * Change this to restaurants.json file location on your server.
-   */
-  static get DATABASE_URL() {
-    const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
-  }
-
-  /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
+    fetch('http://localhost:1337/restaurants').then(function(response) {
+    return response.json();
+  })
+  .then(function(myJson) {
+    const restaurants =myJson;
+  //  console.log(restaurants);
+    callback(null, restaurants);
+  }).catch(function(error) {
         callback(error, null);
-      }
-    };
-    xhr.send();
+    });
   }
 
   /**
@@ -36,18 +24,19 @@ class DBHelper {
    */
   static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
-          callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
-        }
-      }
-    });
+    fetch('http://localhost:1337/restaurants/'+id).then(function(response) {
+    return response.json();
+  })
+  .then(function(myJson) {
+    const restaurant =myJson;
+    if (restaurant) { // Got the restaurant
+      callback(null, restaurant);
+    } else { // Restaurant does not exist in the database
+      callback('Restaurant does not exist', null);
+    }
+    }).catch(function(error) {
+          callback(error, null);
+      });
   }
 
   /**
@@ -150,19 +139,19 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    return (`/img/${restaurant.photograph}.jpg`);
   }
   static imageUrlForRestaurant_small(restaurant) {
-    return (`/img_200/${restaurant.photograph}`);
+    return (`/img_200/${restaurant.photograph}.jpg`);
   }
   static imageUrlForRestaurant_medium(restaurant) {
-    return (`/img_400/${restaurant.photograph}`);
+    return (`/img_400/${restaurant.photograph}.jpg`);
   }
   static imageUrlForRestaurant_large(restaurant) {
-    return (`/img_800/${restaurant.photograph}`);
+    return (`/img_800/${restaurant.photograph}.jpg`);
   }
   static imageUrlForRestaurant_mlarge(restaurant) {
-    return (`/img_600/${restaurant.photograph}`);
+    return (`/img_600/${restaurant.photograph}.jpg`);
   }
   static imageAlt(restaurant) {
     return (restaurant.alt);
