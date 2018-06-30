@@ -2,21 +2,67 @@
  * Common database helper functions.
  */
 class DBHelper {
+ // BEGIN IDB
+  static openIDB(){
+      // import idb from 'idb';
+  //  var index=db.transaction('rests').objectStore('rests').index('by-id');
+    var dbPromise=idb.open('mws-db',1,function(upgradeDb){
+      var store= upgradeDb.createObjectStore('rests',{keyPath:'id'});
+      store.createIndex('by-id', 'id');
+    });
+    return dbPromise;
+  }
+  static getIDB() {
+    var dbPromise=DBHelper.openIDB();
+    return dbPromise.then(function(db){
+      if(!db)
+        return;
+      var store = db.transaction('rests').objectStore('rests');
+      return store.getAll();
+    });
+  }
 
+  static insertIDB(restaurants){
+        var dbPromise= DBHelper.openIDB();
+        dbPromise.then(function(db){
+          var tx= db.transaction('rests','readwrite');
+          var store = tx.objectStore('rests');
+          restaurants.forEach(function(rest){
+            store.put(rest);
+          });
+
+        });
+  }
+// END IDB
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
+var idbRests= DBHelper.getIDB();
+idbRests.then(function(restaurants){
+  if(restaurants.length){
+    //console.log(restaurants);
+  return Promise.resolve(restaurants);
+  }
+  else{
+    // begin fetch
     fetch('http://localhost:1337/restaurants').then(function(response) {
     return response.json();
-  })
-  .then(function(myJson) {
-    const restaurants =myJson;
-  //  console.log(restaurants);
-    callback(null, restaurants);
-  }).catch(function(error) {
-        callback(error, null);
-    });
+  });
+// end fetch
+  }
+
+})
+.then(function(myJson) {
+  const restaurants =myJson;
+//  console.log(restaurants);
+DBHelper.insertIDB(restaurants);
+  callback(null, restaurants);
+}).catch(function(error) {
+      callback(error, null);
+  });
+
+
   }
 
   /**
