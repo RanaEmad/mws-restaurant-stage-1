@@ -38,25 +38,36 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
+    var rests=[];
 var idbRests= DBHelper.getIDB();
 idbRests.then(function(restaurants){
   if(restaurants.length){
-    //console.log(restaurants);
+    console.log(restaurants);
+    rests=restaurants;
   return Promise.resolve(restaurants);
   }
   else{
     // begin fetch
     fetch('http://localhost:1337/restaurants').then(function(response) {
-    return response.json();
-  });
+      rests=response.json();
+    return rests;
+  })
+  .then(function(myJson) {
+    const restaurants =myJson;
+  DBHelper.insertIDB(restaurants);
+    callback(null, restaurants);
+  }).catch(function(error) {
+        callback(error, null);
+    });
+    return rests;
 // end fetch
   }
 
 })
 .then(function(myJson) {
   const restaurants =myJson;
-//  console.log(restaurants);
-DBHelper.insertIDB(restaurants);
+ // console.log(restaurants);
+// DBHelper.insertIDB(restaurants);
   callback(null, restaurants);
 }).catch(function(error) {
       callback(error, null);
