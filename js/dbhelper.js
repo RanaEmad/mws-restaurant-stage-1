@@ -211,7 +211,18 @@ idbRests.then(function(restaurants){
     return (`/img_600/${restaurant.photograph}.jpg`);
   }
   static imageAlt(restaurant) {
-    return (restaurant.alt);
+    var alt=[];
+    alt[1]="People Sitting around a dinning table in a restaurant";
+    alt[2]="Pizza in a plate";
+    alt[3]="Dinning tables and chairs in a restaurant";
+    alt[4]="Katz's Delicatessen restaurant from outside on a street corner";
+    alt[5]="People dinning";
+    alt[6]="People Sitting around a wooden tables in a restaurant and some people standing in line in front of an American flag";
+    alt[7]="Two men standing in front of Superiority Burger one holding a dog leash";
+    alt[8]="A big sign with The Dutch written on it next to it is a flowering tree";
+    alt[9]="Some people around a table with one girl looking at her phone";
+    alt[10]="An empty open kitchen with white chairs and tables";
+    return (alt[restaurant.id]);
   }
 
   /**
