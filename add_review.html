@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3397DB">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <link rel="stylesheet" href="css/styles.css">
+  <title>Add Restaurant Review</title>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <h1><a href="/">Add Restaurant Reviews</a></h1>
+    </nav>
+  </header>
+
+  <main id="maincontent">
+<form id="add_review_form" action="http://localhost:1337/reviews/" method="post" role="form">
+  <!-- "restaurant_id": <restaurant_id>,
+  "name": <reviewer_name>,
+  "rating": <rating>,
+  "comments": <comment_text> -->
+  <input name="restaurant_id" id="restaurant_id" type="hidden" value="1" />
+  <label for="name">Reviewer Name</label>
+  <input type="text" name="name" id="name" />
+  <label for="name">Rating</label>
+  <input type="text" name="rating" id="rating" />
+  <label for="name">Comments</label>
+  <textarea name="comments" id="comments" rows="5"></textarea>
+  <input id="submit_review" type="submit" value="submit" />
+</form>
+
+  </main>
+<script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+  <!-- <script type="application/javascript" charset="utf-8" src="js/main.js"></script> -->
+  <script type="application/javascript" charset="utf-8" src="js/reviews.js"></script>
+
+
+  <footer id="footer">
+    Copyright (c) 2017 <a href="/"><strong>Add Restaurant Review</strong></a> All Rights Reserved.
+  </footer>
+
+</body>
+
+</html>

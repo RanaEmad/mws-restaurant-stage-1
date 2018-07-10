@@ -201,6 +201,12 @@ createRestaurantHTML = (restaurant) => {
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
 
+  const rev = document.createElement('a');
+  rev.innerHTML = 'Add Review';
+  rev.setAttribute('aria-label', 'Add Review To '+restaurant.name);
+  rev.href =   `./add_review.html?id=${restaurant.id}`;
+  li.append(rev)
+
   return li
 }
 
