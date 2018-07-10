@@ -66,10 +66,10 @@ window.addEventListener('load', function() {
     var condition = navigator.onLine ? "online" : "offline";
       if(navigator.onLine){
       //sync database reviews and delete from idb
-      alert("online");
+      console.log("online");
       }
       else{
-        alert("offline");
+        console.log("offline");
       }
 
   }
@@ -93,13 +93,18 @@ function openIDB(){
         return;
       var store = db.transaction('reviews').objectStore('reviews');
       var reviews =store.getAll();
-      console.log(reviews);
-      /*
-      foreach(reviews ){
-      insert in database
-      }
-      */
+      return reviews;
     });
+  }
+  function insertIDB(review){
+        var dbPromise= openIDB();
+        dbPromise.then(function(db){
+          var tx= db.transaction('reviews','readwrite');
+          var store = tx.objectStore('reviews');
+            store.put(review);
+            console.log(review);
+
+        });
   }
 // end dbhelper
 
@@ -109,15 +114,41 @@ function openIDB(){
 submit_form= (restaurant = self.restaurant)=>{
 const form= document.getElementById("add_review_form");
 const fd = new FormData(form);
-// const data={"restaurant_id":}
-console.log(fd);
-    fetch('http://localhost:1337/reviews',{method:"post",
-     body: fd
+if(navigator.onLine){
+
+  fetch('http://localhost:1337/reviews',{method:"post",
+   body: fd
   }).then(function(response){
-        console.log(response.json());
-    }).catch(function(error){
-        console.log(error);
-    });
+    //  console.log(response.json());
+  }).catch(function(error){
+      console.log(error);
+  });
+
+}
+else{
+// const data= {restaurant_id:"1",
+// name:"name",
+// id:1
+// }
+// const data={id:1,review:JSON.stringify(fd)};
+let review_id=1;
+  const reviews=getIDBReviews();
+
+  reviews.then(function(reviews){
+    if(reviews.length){
+    return Promise.resolve(reviews);
+    }
+  }).then(function(myJson){
+    review_id=myJson[myJson.length-1].id+1;
+  });
+    const data= {id:review_id,restaurant_id:document.getElementById("restaurant_id").value,
+    name:document.getElementById("name").value
+  }
+  console.log(review_id);
+  insertIDB(data);
+
+}
+
 }
 
 /**

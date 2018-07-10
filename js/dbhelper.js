@@ -9,6 +9,8 @@ class DBHelper {
     var dbPromise=idb.open('mws-db',1,function(upgradeDb){
       var store= upgradeDb.createObjectStore('rests',{keyPath:'id'});
       store.createIndex('by-id', 'id');
+      var rev_store= upgradeDb.createObjectStore('reviews',{keyPath:'id'});
+      rev_store.createIndex('by-id', 'id');
     });
     return dbPromise;
   }
@@ -42,7 +44,7 @@ class DBHelper {
 var idbRests= DBHelper.getIDB();
 idbRests.then(function(restaurants){
   if(restaurants.length){
-    console.log(restaurants);
+    // console.log(restaurants);
     rests=restaurants;
   return Promise.resolve(restaurants);
   }
