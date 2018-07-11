@@ -65,12 +65,56 @@ window.addEventListener('load', function() {
   function updateData(event) {
     var condition = navigator.onLine ? "online" : "offline";
       if(navigator.onLine){
-      //sync database reviews and delete from idb
-      console.log("online");
-      }
-      else{
-        console.log("offline");
-      }
+        //get all reviews in IDB
+        const reviews=getIDBReviews();
+
+        reviews.then(function(reviews){
+          return Promise.resolve(reviews);
+        }).then(function(myJson){
+          if(myJson.length){
+
+            myJson.forEach(function(rev){
+
+              let rev_data= {
+                restaurant_id:rev.restaurant_id,
+                name:rev.name,
+                rating:rev.rating,
+                comments:rev.comments
+            }
+            //sync database reviews and delete from idb
+            console.log("online");
+            fetch('http://localhost:1337/reviews',{method:"post",
+             body: JSON.stringify(rev_data)
+            }).then(function(response){
+
+            }).catch(function(error){
+                console.log(error);
+            });
+            ////////
+
+          });
+          //delete record after sync
+          var dbPromise=openIDB();
+          dbPromise.then(function(db){
+            if(!db)
+              return;
+              var tx= db.transaction('reviews','readwrite');
+              var store = tx.objectStore('reviews').clear();
+              //alert("Review Submitted Successfully!");
+          });
+            ///forEach
+          }
+          //length
+
+            });
+            //reviews.then
+
+        }
+        //navigator.online
+
+      // else{
+      //   console.log("offline");
+      // }
 
   }
 
@@ -119,14 +163,14 @@ if(navigator.onLine){
   fetch('http://localhost:1337/reviews',{method:"post",
    body: fd
   }).then(function(response){
-    //  console.log(response.json());
+    alert("Review Submitted Successfully!");
   }).catch(function(error){
       console.log(error);
   });
 
 }
 else{
-  
+
 let review_id=1;
   const reviews=getIDBReviews();
 
