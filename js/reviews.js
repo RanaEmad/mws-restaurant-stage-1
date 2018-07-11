@@ -126,26 +126,26 @@ if(navigator.onLine){
 
 }
 else{
-// const data= {restaurant_id:"1",
-// name:"name",
-// id:1
-// }
-// const data={id:1,review:JSON.stringify(fd)};
+  
 let review_id=1;
   const reviews=getIDBReviews();
 
   reviews.then(function(reviews){
-    if(reviews.length){
     return Promise.resolve(reviews);
-    }
   }).then(function(myJson){
-    review_id=myJson[myJson.length-1].id+1;
-  });
-    const data= {id:review_id,restaurant_id:document.getElementById("restaurant_id").value,
-    name:document.getElementById("name").value
+    if(myJson.length){
+      review_id=myJson[myJson.length-1].id+1;
+    }
+    const data= {
+      id:review_id,
+      restaurant_id:document.getElementById("restaurant_id").value,
+      name:document.getElementById("name").value,
+      rating:document.getElementById("rating").value,
+      comments:document.getElementById("comments").value
   }
-  console.log(review_id);
   insertIDB(data);
+  });
+
 
 }
 
