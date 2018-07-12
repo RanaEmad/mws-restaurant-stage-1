@@ -127,26 +127,80 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   }
 }
 
+function openIDB(){
+    // import idb from 'idb';
+//  var index=db.transaction('rests').objectStore('rests').index('by-id');
+  var dbPromise=idb.open('mws-db',1,function(upgradeDb){
+    var store= upgradeDb.createObjectStore('reviews',{keyPath:'id'});
+    store.createIndex('by-id', 'id');
+  });
+  return dbPromise;
+}
+ function getIDBReviews() {
+    var dbPromise=openIDB();
+    return dbPromise.then(function(db){
+      if(!db)
+        return;
+      var store = db.transaction('reviews').objectStore('reviews');
+      var reviews =store.getAll();
+      return reviews;
+    });
+  }
+
 /**
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
-  const container = document.getElementById('reviews-container');
-  const title = document.createElement('h3');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
+	//fetch Reviews
+let revs=fetch("http://localhost:1337/reviews/?restaurant_id="+self.restaurant.id).then(function(response){
+	let rev= response.json();
+	return rev;
+}).then(function(response){
 
-  if (!reviews) {
-    const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
-    return;
-  }
-  const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
-  });
-  container.appendChild(ul);
+	 reviews=response;
+	const container = document.getElementById('reviews-container');
+	const title = document.createElement('h3');
+	title.innerHTML = 'Reviews';
+	container.appendChild(title);
+
+	if (!reviews) {
+		const noReviews = document.createElement('p');
+		noReviews.innerHTML = 'No reviews yet!';
+		container.appendChild(noReviews);
+		return;
+	}
+	const ul = document.getElementById('reviews-list');
+	reviews.forEach(review => {
+		ul.appendChild(createReviewHTML(review));
+	});
+	container.appendChild(ul);
+
+
+});
+//get idb reviews
+reviews=getIDBReviews();
+reviews.then(function(response){
+	reviews=response;
+ const container = document.getElementById('reviews-container');
+ const title = document.createElement('h3');
+ title.innerHTML = 'Reviews';
+ container.appendChild(title);
+
+ if (!reviews) {
+	 const noReviews = document.createElement('p');
+	 noReviews.innerHTML = 'No reviews yet!';
+	 container.appendChild(noReviews);
+	 return;
+ }
+ const ul = document.getElementById('reviews-list');
+ reviews.forEach(review => {
+	 ul.appendChild(createReviewHTML(review));
+ });
+ container.appendChild(ul);
+});
+
+
+
 }
 
 /**
@@ -158,9 +212,9 @@ createReviewHTML = (review) => {
   name.innerHTML = review.name;
   li.appendChild(name);
 
-  const date = document.createElement('p');
-  date.innerHTML = review.date;
-  li.appendChild(date);
+  // const date = document.createElement('p');
+  // date.innerHTML = review.createdAt;
+  // li.appendChild(date);
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
