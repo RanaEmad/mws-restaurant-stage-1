@@ -170,7 +170,7 @@ if(navigator.onLine){
 
 }
 else{
-
+alert("You are currently offline, your review will be submitted when the connection is reestablished");
 let review_id=1;
   const reviews=getIDBReviews();
 

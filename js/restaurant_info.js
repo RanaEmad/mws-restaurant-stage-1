@@ -51,6 +51,7 @@ fetchRestaurantFromURL = (callback) => {
         console.error(error);
         return;
       }
+			check_fav();
       fillRestaurantHTML();
       callback(null, restaurant)
     });
@@ -196,4 +197,31 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+//add to Favorites
+var favorite=document.getElementById("favorite");
+favorite.addEventListener('click',function(){
+	var id=self.restaurant.id;
+	if(self.restaurant.is_favorite=="true"){
+		fetch("http://localhost:1337/restaurants/"+id+"/?is_favorite=false",{"method":"PUT"})
+		.then(function(response){
+			favorite.innerHTML="Favorite Restaurant";
+			self.restaurant.is_favorite="false";
+		});
+
+	}
+	else{
+		fetch("http://localhost:1337/restaurants/"+id+"/?is_favorite=true",{"method":"PUT"})
+		.then(function(response){
+			favorite.innerHTML="Unfavorite Restaurant";
+			self.restaurant.is_favorite="true";
+		});
+	}
+
+});
+function check_fav(){
+	if(self.restaurant.is_favorite=="true"){
+		document.getElementById("favorite").innerHTML="Unfavorite Restaurant";
+	}
 }
