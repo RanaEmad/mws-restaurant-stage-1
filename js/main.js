@@ -204,6 +204,7 @@ createRestaurantHTML = (restaurant) => {
   const rev = document.createElement('a');
   rev.innerHTML = 'Add Review';
   rev.setAttribute('aria-label', 'Add Review To '+restaurant.name);
+  rev.setAttribute('class', 'btn_add_rev');
   rev.href =   `./add_review.html?id=${restaurant.id}`;
   li.append(rev)
 
