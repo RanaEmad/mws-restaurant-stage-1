@@ -2,7 +2,7 @@ let restaurants,
   neighborhoods,
   cuisines
 var map
-var markers = []
+var markers = [];
 
 function register_sw(){
   //register service worker
@@ -141,6 +141,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
   });
+  lazy_load();
   addMarkersToMap();
 }
 
@@ -157,29 +158,35 @@ createRestaurantHTML = (restaurant) => {
   //     <img src="images/still_life-1600_large_2x.jpg" alt="Still Life">
   // </picture>
   const pic= document.createElement("picture");
+  pic.className="lozad";
+  pic["data-iesrc"]=DBHelper.imageUrlForRestaurant_small(restaurant);
 
   const source1= document.createElement("source");
   source1.media="(min-width: 1180px)";
   source1.srcset=DBHelper.imageUrlForRestaurant_small(restaurant);
+  // source1.datasrcset=DBHelper.imageUrlForRestaurant_small(restaurant);
   pic.append(source1);
 
   const source2= document.createElement("source");
   source2.media="(min-width: 744px)";
   source2.srcset=DBHelper.imageUrlForRestaurant_medium(restaurant);
+  // source2.datasrcset=DBHelper.imageUrlForRestaurant_medium(restaurant);
   pic.append(source2);
 
   const source3= document.createElement("source");
   source3.media="(max-width: 743px)";
   source3.srcset=DBHelper.imageUrlForRestaurant_large(restaurant);
+  // source3.datasrcset=DBHelper.imageUrlForRestaurant_large(restaurant);
   pic.append(source3);
 
   // end picture
 
-  const image = document.createElement('img');
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant_small(restaurant);
-  image.alt= DBHelper.imageAlt(restaurant);
-  pic.append(image);
+  // const image = document.createElement('img');
+  // image.className = 'restaurant-img';
+  // // image.src = DBHelper.imageUrlForRestaurant_small(restaurant);
+  // image.datasrc = DBHelper.imageUrlForRestaurant_small(restaurant);
+  // image.alt= DBHelper.imageAlt(restaurant);
+  // pic.append(image);
   li.append(pic);
   // li.append(image);
 
@@ -223,4 +230,17 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     });
     self.markers.push(marker);
   });
+}
+function lazy_load(){
+  const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+observer.observe();
+
+//   Array.prototype.forEach.call( document.images, function(img) {
+//   img.setAttribute('src', img.getAttribute('datasrc'));
+//   // console.log(this);
+//   img.onload = function() {
+//     img.removeAttribute('datasrc');
+//   };
+// });
+
 }
